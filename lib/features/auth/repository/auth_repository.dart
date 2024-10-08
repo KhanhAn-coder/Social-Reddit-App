@@ -62,7 +62,7 @@ class AuthRepository{
               'helpful',
               'plusone',
               'rocket',
-              'thankyou'
+              'thankyou',
               'til'
             ]
         );
