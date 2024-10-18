@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:reddit_app/features/auth/screens/login_screen.dart';
+import 'package:reddit_app/features/chat/screens/chat_box_screen.dart';
 import 'package:reddit_app/features/community/screens/add_mods_screen.dart';
 import 'package:reddit_app/features/community/screens/community_screen.dart';
 import 'package:reddit_app/features/community/screens/create_community_screen.dart';
@@ -27,4 +28,5 @@ final loggedInRoutes = RouteMap(routes: {
   '/edit-profile/:uid': (routeData)=> MaterialPage(child: EditProfileScreen(uid: routeData.pathParameters['uid']!)),
   '/add-post/:type': (routeData)=> MaterialPage(child: AddPostTypeScreen(type: routeData.pathParameters['type']!)),
   '/post/:postId/comments':(routeData)=> MaterialPage(child: CommentsScreen(postId: routeData.pathParameters['postId']!)),
+  '/chat/:id':(routeData)=> MaterialPage(child: ChatBoxScreen(friendId: routeData.pathParameters['id']!)),
 });

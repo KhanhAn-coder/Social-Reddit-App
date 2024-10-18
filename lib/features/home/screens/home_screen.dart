@@ -80,6 +80,10 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
               icon: Icon(Icons.add),
               label: ''
           ),
+          BottomNavigationBarItem(
+              icon: Icon(Icons.messenger),
+              label: ''
+          ),
         ],
         onTap: pageChanged,
         currentIndex: _page,

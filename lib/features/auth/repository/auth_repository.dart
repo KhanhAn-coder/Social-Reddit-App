@@ -64,7 +64,8 @@ class AuthRepository{
               'rocket',
               'thankyou',
               'til'
-            ]
+            ],
+            contacts: [],
         );
         await _firestore.collection(FirebaseConstants.usersCollection).doc(userCredential.user!.uid).set(userModel.toMap());
       }else{
@@ -92,7 +93,8 @@ class AuthRepository{
           uid: userCredential.user!.uid,
           isAuthenticated: false,
           karma: 0,
-          awards: []
+          awards: [],
+          contacts: [],
       );
       await _firestore.collection(FirebaseConstants.usersCollection).doc(userModel.uid).set(userModel.toMap());
       return right(userModel);

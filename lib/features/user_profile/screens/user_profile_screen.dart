@@ -16,6 +16,10 @@ class UserProfileScreen extends ConsumerWidget {
     Routemaster.of(context).push('/edit-profile/$uid');
   }
 
+  void navigateToChatScreen(String friendId, BuildContext context){
+    Routemaster.of(context).push('/chat/$friendId');
+  }
+
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final currUser = ref.watch(userProvider)!;
@@ -54,7 +58,7 @@ class UserProfileScreen extends ConsumerWidget {
                                 color: Colors.blue
                             ),
                             )
-                        ) : const SizedBox(),
+                        ) :  const SizedBox()
                       )
                     ],
                   ),
@@ -75,6 +79,14 @@ class UserProfileScreen extends ConsumerWidget {
                                           fontWeight: FontWeight.bold
                                       ),
                                       ),
+
+                                      if(user.uid !=currUser.uid)
+                                        IconButton(
+                                          onPressed: ()=> navigateToChatScreen(user.uid, context),
+                                          icon: const Icon(Icons.message),
+                                          iconSize: 30,
+                                          color: Colors.grey,
+                                        ),
                                     ],
                                   ),
                                   const SizedBox(height: 5,),

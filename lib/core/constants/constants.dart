@@ -1,4 +1,5 @@
 import 'package:flutter/cupertino.dart';
+import 'package:reddit_app/features/chat/screens/list_chat_screen.dart';
 import 'package:reddit_app/features/feeds/screens/feed_screen.dart';
 import 'package:reddit_app/features/post/screens/add_post_screen.dart';
 
@@ -14,6 +15,7 @@ class Constants{
   static const tabBars = [
     FeedScreen(),
     AddPostScreen(),
+    ListChatScreen(),
   ];
   static const IconData up = IconData(0xe800, fontFamily: 'MyFlutterApp', fontPackage: null);
   static const IconData down = IconData(0xe801, fontFamily: 'MyFlutterApp', fontPackage: null);

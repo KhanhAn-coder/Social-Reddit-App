@@ -8,6 +8,7 @@ class UserModel{
   final bool isAuthenticated;
   final int karma;
   final List<String> awards;
+  final List<String> contacts;
 
 //<editor-fold desc="Data Methods">
   const UserModel({
@@ -18,6 +19,7 @@ class UserModel{
     required this.isAuthenticated,
     required this.karma,
     required this.awards,
+    required this.contacts,
   });
 
   @override
@@ -31,7 +33,8 @@ class UserModel{
           uid == other.uid &&
           isAuthenticated == other.isAuthenticated &&
           karma == other.karma &&
-          awards == other.awards);
+          awards == other.awards &&
+          contacts == other.contacts);
 
   @override
   int get hashCode =>
@@ -41,11 +44,12 @@ class UserModel{
       uid.hashCode ^
       isAuthenticated.hashCode ^
       karma.hashCode ^
-      awards.hashCode;
+      awards.hashCode ^
+      contacts.hashCode;
 
   @override
   String toString() {
-    return 'UserModel{ name: $name, profilePic: $profilePic, banner: $banner, uid: $uid, isAuthenticated: $isAuthenticated, karma: $karma, awards: $awards,}';
+    return 'UserModel{ name: $name, profilePic: $profilePic, banner: $banner, uid: $uid, isAuthenticated: $isAuthenticated, karma: $karma, awards: $awards, contacts: $contacts}';
   }
 
   UserModel copyWith({
@@ -56,6 +60,7 @@ class UserModel{
     bool? isAuthenticated,
     int? karma,
     List<String>? awards,
+    List<String>? contacts,
   }) {
     return UserModel(
       name: name ?? this.name,
@@ -65,6 +70,7 @@ class UserModel{
       isAuthenticated: isAuthenticated ?? this.isAuthenticated,
       karma: karma ?? this.karma,
       awards: awards ?? this.awards,
+      contacts: contacts ?? this.contacts
     );
   }
 
@@ -77,6 +83,7 @@ class UserModel{
       'isAuthenticated': this.isAuthenticated,
       'karma': this.karma,
       'awards': this.awards,
+      'contacts': this.contacts,
     };
   }
 
@@ -89,6 +96,7 @@ class UserModel{
       isAuthenticated: map['isAuthenticated'] as bool,
       karma: map['karma'] as int,
       awards: List<String>.from(map['awards']),
+      contacts: List<String>.from(map['contacts']),
     );
   }
 
