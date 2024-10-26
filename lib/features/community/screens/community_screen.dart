@@ -7,6 +7,7 @@ import 'package:reddit_app/core/common/post_card.dart';
 import 'package:reddit_app/features/auth/controller/auth_controller.dart';
 import 'package:reddit_app/features/community/controller/community_controller.dart';
 import 'package:reddit_app/features/post/controller/post_controller.dart';
+import 'package:reddit_app/features/responsive/responsive.dart';
 import 'package:reddit_app/models/community_model.dart';
 import 'package:routemaster/routemaster.dart';
 
@@ -111,7 +112,7 @@ class CommunityScreen extends ConsumerWidget {
                     itemCount: data.length,
                     itemBuilder: (context,index){
                       final post = data[index];
-                      return PostCard(post: post);
+                      return Responsive(child: PostCard(post: post));
                     },
                   ),
                   error: (error, StackTrace)=> ErrorText(error: error.toString()),

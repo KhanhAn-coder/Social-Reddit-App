@@ -1,5 +1,6 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
+import 'package:flutter/foundation.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:fpdart/fpdart.dart';
 import 'package:google_sign_in/google_sign_in.dart';
@@ -32,19 +33,27 @@ class AuthRepository{
 
   FutureEither<UserModel> signInWithGoogle(bool isFromLoginScreen) async {
     try{
-      final googleUser = await _googleSignIn.signIn();
-      final googleAuth = await googleUser?.authentication;
-
-      final credential = GoogleAuthProvider.credential(
-        accessToken: googleAuth?.accessToken,
-        idToken: googleAuth?.idToken,
-      );
       UserCredential userCredential;
-      if(isFromLoginScreen){
-        userCredential = await _auth.signInWithCredential(credential);
+      if(kIsWeb){
+        GoogleAuthProvider googleProvider = GoogleAuthProvider();
+        googleProvider.addScope('https://www.googleapis.com/auth/contacts.readonly');
+        userCredential = await _auth.signInWithPopup(googleProvider);
       }else{
-        userCredential = await _auth.currentUser!.linkWithCredential(credential);
+        final googleUser = await _googleSignIn.signIn();
+        final googleAuth = await googleUser?.authentication;
+
+        final credential = GoogleAuthProvider.credential(
+          accessToken: googleAuth?.accessToken,
+          idToken: googleAuth?.idToken,
+        );
+
+        if(isFromLoginScreen){
+          userCredential = await _auth.signInWithCredential(credential);
+        }else{
+          userCredential = await _auth.currentUser!.linkWithCredential(credential);
+        }
       }
+
 
       UserModel userModel;
       if(userCredential.additionalUserInfo!.isNewUser){
@@ -86,7 +95,9 @@ class AuthRepository{
   FutureEither<UserModel> signInAsGuest() async{
     try{
       final userCredential = await _auth.signInAnonymously();
-      UserModel userModel = UserModel(
+      UserModel userModel;
+      if(userCredential.additionalUserInfo!.isNewUser){
+        userModel = UserModel(
           name: 'Guest',
           profilePic: Constants.avatarDefault,
           banner: Constants.bannerDefault,
@@ -95,8 +106,13 @@ class AuthRepository{
           karma: 0,
           awards: [],
           contacts: [],
-      );
-      await _firestore.collection(FirebaseConstants.usersCollection).doc(userModel.uid).set(userModel.toMap());
+        );
+        await _firestore.collection(FirebaseConstants.usersCollection).doc(userModel.uid).set(userModel.toMap());
+      }else{
+        userModel  = await getUserData(userCredential.user!.uid).first;
+      }
+
+
       return right(userModel);
     }on FirebaseException catch(e){
       throw e;

@@ -1,7 +1,9 @@
 import 'dart:io';
+import 'dart:typed_data';
 
 import 'package:dotted_border/dotted_border.dart';
 import 'package:flutter/cupertino.dart';
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:reddit_app/core/ultis.dart';
@@ -25,6 +27,8 @@ class EditProfileScreen extends ConsumerStatefulWidget {
 class _EditProfileScreenState extends ConsumerState<EditProfileScreen> {
   File? bannerFile;
   File? profileFile;
+  Uint8List? bannerWebFile;
+  Uint8List? profileWebFile;
   late TextEditingController? nameController;
 
   @override
@@ -43,18 +47,26 @@ class _EditProfileScreenState extends ConsumerState<EditProfileScreen> {
 
   void selectBannerImage() async{
     final res = await pickImage();
-    if(res != null){
+    if(res != null && !kIsWeb){
       setState(() {
         bannerFile = File(res.files.first.path!);
+      });
+    }else{
+      setState(() {
+        bannerWebFile = res!.files.first.bytes;
       });
     }
   }
 
   void selectProfileImage() async{
     final res = await pickImage();
-    if(res != null){
+    if(res != null && !kIsWeb){
       setState(() {
         profileFile = File(res.files.first.path!);
+      });
+    }else{
+      setState(() {
+        profileWebFile = res!.files.first.bytes;
       });
     }
   }
@@ -105,9 +117,10 @@ class _EditProfileScreenState extends ConsumerState<EditProfileScreen> {
                                 child: Container(
                                   width: double.infinity,
                                   height: 150,
-                                  child: bannerFile != null ?
+                                  child:bannerWebFile!=null ? Image.memory(bannerWebFile!):
+                                  bannerFile != null ?
                                   Image.file(bannerFile!):
-                                  user!.profilePic == Constants.bannerDefault || user.profilePic == ''?
+                                  user!.banner == Constants.bannerDefault || user.banner == ''?
                                   const Center(
                                     child: Icon(Icons.camera_alt_outlined, size: 40,),
                                   )
@@ -120,7 +133,10 @@ class _EditProfileScreenState extends ConsumerState<EditProfileScreen> {
                             left: 20,
                             child: GestureDetector(
                               onTap: selectProfileImage,
-                              child: profileFile != null?
+                              child:profileWebFile != null ?
+                              CircleAvatar(
+                                backgroundImage: MemoryImage(profileWebFile!),
+                              ) : profileFile != null?
                               CircleAvatar(
                                 backgroundImage: FileImage(profileFile!),
                               ):

@@ -1,7 +1,9 @@
 import 'dart:io';
+import 'dart:typed_data';
 
 import 'package:dotted_border/dotted_border.dart';
 import 'package:flutter/cupertino.dart';
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/painting.dart';
 import 'package:flutter/widgets.dart';
@@ -11,6 +13,7 @@ import 'package:reddit_app/core/common/loader.dart';
 import 'package:reddit_app/core/ultis.dart';
 import 'package:reddit_app/features/community/controller/community_controller.dart';
 import 'package:reddit_app/features/post/controller/post_controller.dart';
+import 'package:reddit_app/features/responsive/responsive.dart';
 import 'package:reddit_app/models/community_model.dart';
 
 class AddPostTypeScreen extends ConsumerStatefulWidget {
@@ -28,6 +31,7 @@ class _AddPostTypeScreenState extends ConsumerState<AddPostTypeScreen> {
   List<Community> communities = [];
   Community? selectedCommunity;
   File? image;
+  Uint8List? imageWebFile;
 
   @override
   void dispose() {
@@ -40,9 +44,13 @@ class _AddPostTypeScreenState extends ConsumerState<AddPostTypeScreen> {
 
   void selectImage()async{
     final res = await pickImage();
-    if(res!=null){
+    if(res!=null && !kIsWeb){
       setState(() {
         image = File(res.files.first.path!);
+      });
+    }else{
+      setState(() {
+        imageWebFile = res!.files.first.bytes;
       });
     }
   }
@@ -108,96 +116,100 @@ class _AddPostTypeScreenState extends ConsumerState<AddPostTypeScreen> {
         ],
       ),
       body: SingleChildScrollView(
-        child: Padding(
-          padding: EdgeInsets.all(8.0),
-          child: Column(
-            children: [
-              TextField(
-                controller: titleController,
-                decoration: const InputDecoration(
-                  filled: true,
-                  hintText: 'Enter Title',
-                  focusedBorder: OutlineInputBorder(
-                    borderSide: BorderSide(color: Colors.blue),
-                    borderRadius: BorderRadius.all(Radius.circular(10))
-                  ),
-                  border: InputBorder.none,
-                  contentPadding: EdgeInsets.all(18)
-                ),
-                maxLength: 30,
-              ),
-              const SizedBox(height: 10,),
-              if(isTypeImage)
-                GestureDetector(
-                  onTap: selectImage,
-                  child: DottedBorder(
-                      radius: const Radius.circular(10),
-                      borderType: BorderType.RRect,
-                      strokeCap: StrokeCap.round,
-                      dashPattern: const [10,4],
-                      color: Colors.grey,
-                      child: Container(
-                        width: double.infinity,
-                        child: image!=null?
-                        Image.file(image!)
-                            :const Icon(Icons.camera_alt_outlined, size: 120,),
-                      )
-                  ),
-                ),
-              if(isTypeText)
+        child: Responsive(
+          child: Padding(
+            padding: EdgeInsets.all(8.0),
+            child: Column(
+              children: [
                 TextField(
-                  controller: descriptionController,
+                  controller: titleController,
                   decoration: const InputDecoration(
-                      filled: true,
-                      hintText: 'Enter Description',
-                      focusedBorder: OutlineInputBorder(
-                          borderSide: BorderSide(color: Colors.blue),
-                          borderRadius: BorderRadius.all(Radius.circular(10))
-                      ),
-                      border: InputBorder.none,
-                      contentPadding: EdgeInsets.all(18)
+                    filled: true,
+                    hintText: 'Enter Title',
+                    focusedBorder: OutlineInputBorder(
+                      borderSide: BorderSide(color: Colors.blue),
+                      borderRadius: BorderRadius.all(Radius.circular(10))
+                    ),
+                    border: InputBorder.none,
+                    contentPadding: EdgeInsets.all(18)
                   ),
-                  maxLines: 5,
+                  maxLength: 30,
                 ),
-              if(isTypeLink)
-                TextField(
-                  controller: linkController,
-                  decoration: const InputDecoration(
-                      filled: true,
-                      hintText: 'Enter link',
-                      focusedBorder: OutlineInputBorder(
-                          borderSide: BorderSide(color: Colors.blue),
-                          borderRadius: BorderRadius.all(Radius.circular(10))
-                      ),
-                      border: InputBorder.none,
-                      contentPadding: EdgeInsets.all(18)
+                const SizedBox(height: 10,),
+                if(isTypeImage)
+                  GestureDetector(
+                    onTap: selectImage,
+                    child: DottedBorder(
+                        radius: const Radius.circular(10),
+                        borderType: BorderType.RRect,
+                        strokeCap: StrokeCap.round,
+                        dashPattern: const [10,4],
+                        color: Colors.grey,
+                        child: Container(
+                          width: double.infinity,
+                          child: imageWebFile!=null?
+                          Image.memory(imageWebFile!):
+                          image!=null?
+                          Image.file(image!)
+                              :const Icon(Icons.camera_alt_outlined, size: 120,),
+                        )
+                    ),
                   ),
+                if(isTypeText)
+                  TextField(
+                    controller: descriptionController,
+                    decoration: const InputDecoration(
+                        filled: true,
+                        hintText: 'Enter Description',
+                        focusedBorder: OutlineInputBorder(
+                            borderSide: BorderSide(color: Colors.blue),
+                            borderRadius: BorderRadius.all(Radius.circular(10))
+                        ),
+                        border: InputBorder.none,
+                        contentPadding: EdgeInsets.all(18)
+                    ),
+                    maxLines: 5,
+                  ),
+                if(isTypeLink)
+                  TextField(
+                    controller: linkController,
+                    decoration: const InputDecoration(
+                        filled: true,
+                        hintText: 'Enter link',
+                        focusedBorder: OutlineInputBorder(
+                            borderSide: BorderSide(color: Colors.blue),
+                            borderRadius: BorderRadius.all(Radius.circular(10))
+                        ),
+                        border: InputBorder.none,
+                        contentPadding: EdgeInsets.all(18)
+                    ),
+                  ),
+                const SizedBox(height: 20,),
+                const Align(
+                  alignment: Alignment.topLeft,
+                  child: Text('Select Community'),
                 ),
-              const SizedBox(height: 20,),
-              const Align(
-                alignment: Alignment.topLeft,
-                child: Text('Select Community'),
-              ),
-              ref.watch(userCommunitiesProvider).when(
-                  data: (data){
-                    communities = data;
-                    if(data.isEmpty){
-                      return const SizedBox();
-                    }
-                    return DropdownButton(
-                      value: selectedCommunity ?? data[0],
-                        items: data.map((e) => DropdownMenuItem(value: e,child: Text(e.name))).toList(),
-                        onChanged: (val){
-                          setState(() {
-                            selectedCommunity = val;
-                          });
-                        }
-                    );
-                  },
-                  error: (error, StackTrace)=> ErrorText(error: error.toString()),
-                  loading: ()=> const Loader()
-              )
-            ],
+                ref.watch(userCommunitiesProvider).when(
+                    data: (data){
+                      communities = data;
+                      if(data.isEmpty){
+                        return const SizedBox();
+                      }
+                      return DropdownButton(
+                        value: selectedCommunity ?? data[0],
+                          items: data.map((e) => DropdownMenuItem(value: e,child: Text(e.name))).toList(),
+                          onChanged: (val){
+                            setState(() {
+                              selectedCommunity = val;
+                            });
+                          }
+                      );
+                    },
+                    error: (error, StackTrace)=> ErrorText(error: error.toString()),
+                    loading: ()=> const Loader()
+                )
+              ],
+            ),
           ),
         ),
       ),

@@ -1,12 +1,14 @@
 import 'package:flutter/material.dart';
 import 'package:reddit_app/features/auth/screens/login_screen.dart';
 import 'package:reddit_app/features/chat/screens/chat_box_screen.dart';
+import 'package:reddit_app/features/chat/screens/list_chat_screen.dart';
 import 'package:reddit_app/features/community/screens/add_mods_screen.dart';
 import 'package:reddit_app/features/community/screens/community_screen.dart';
 import 'package:reddit_app/features/community/screens/create_community_screen.dart';
 import 'package:reddit_app/features/community/screens/edit_community_screen.dart';
 import 'package:reddit_app/features/community/screens/mod_tools_screen.dart';
 import 'package:reddit_app/features/home/screens/home_screen.dart';
+import 'package:reddit_app/features/post/screens/add_post_screen.dart';
 import 'package:reddit_app/features/post/screens/add_post_type_screen.dart';
 import 'package:reddit_app/features/post/screens/comments_screen.dart';
 import 'package:reddit_app/features/user_profile/screens/edit_profile_screen.dart';
@@ -29,4 +31,6 @@ final loggedInRoutes = RouteMap(routes: {
   '/add-post/:type': (routeData)=> MaterialPage(child: AddPostTypeScreen(type: routeData.pathParameters['type']!)),
   '/post/:postId/comments':(routeData)=> MaterialPage(child: CommentsScreen(postId: routeData.pathParameters['postId']!)),
   '/chat/:id':(routeData)=> MaterialPage(child: ChatBoxScreen(friendId: routeData.pathParameters['id']!)),
+  '/add-post':(routeData)=>const MaterialPage(child: AddPostScreen()),
+  '/list-chat': (routeData)=> const MaterialPage(child: ListChatScreen()),
 });

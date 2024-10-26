@@ -1,4 +1,5 @@
 import 'package:flutter/cupertino.dart';
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:reddit_app/core/constants/constants.dart';
@@ -6,7 +7,9 @@ import 'package:reddit_app/features/auth/controller/auth_controller.dart';
 import 'package:reddit_app/features/home/delegates/search_community_delegate.dart';
 import 'package:reddit_app/features/home/drawer/community_list_drawer.dart';
 import 'package:reddit_app/features/home/drawer/prrofile_drawer.dart';
+import 'package:reddit_app/features/responsive/responsive.dart';
 import 'package:reddit_app/theme/pallete.dart';
+import 'package:routemaster/routemaster.dart';
 
 class HomeScreen extends ConsumerStatefulWidget {
   const HomeScreen({super.key});
@@ -23,11 +26,20 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
   void displayProfileDrawer(BuildContext context){
     Scaffold.of(context).openEndDrawer();
   }
-  void pageChanged(int page){
+  void pageChanged(int page) {
     setState(() {
       _page = page;
     });
   }
+  void navigateToAddPostScreen(BuildContext context){
+    Routemaster.of(context).push('/add-post');
+  }
+
+  void navigateToChatListScreen(BuildContext context){
+    Routemaster.of(context).push('/list-chat');
+  }
+
+
   @override
   Widget build(BuildContext context) {
     final user = ref.watch(userProvider);
@@ -49,6 +61,15 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
               },
               icon: const Icon(Icons.search)
           ),
+          if(kIsWeb)
+            IconButton(
+                onPressed: ()=> navigateToAddPostScreen(context),
+                icon: const Icon(Icons.add)
+            ),
+            IconButton(
+                onPressed: ()=> navigateToChatListScreen(context),
+                icon: const Icon(Icons.messenger)
+            ),
           Builder(
               builder: (context) {
                 return IconButton(
@@ -65,10 +86,10 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
             'Home'
         ),
       ),
-      body: Constants.tabBars[_page],
+      body: Responsive(child: Constants.tabBars[_page]),
       drawer: const CommunityListDrawer(),
       endDrawer: const ProfileDrawer(),
-      bottomNavigationBar: CupertinoTabBar(
+      bottomNavigationBar: !kIsWeb? CupertinoTabBar(
         backgroundColor: currentTheme.backgroundColor,
         activeColor: currentTheme.iconTheme.color,
         items: const [
@@ -87,10 +108,11 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
         ],
         onTap: pageChanged,
         currentIndex: _page,
-      ),
+      ):const SizedBox(),
     );
   }
-  }
+}
+
 
 
 
