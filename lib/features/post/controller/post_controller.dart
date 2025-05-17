@@ -1,4 +1,5 @@
 import 'dart:io';
+import 'dart:typed_data';
 
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
@@ -134,13 +135,15 @@ class PostController extends StateNotifier<bool>{
     required String title,
     required Community selectedCommunity,
     required File? file,
+    required Uint8List? webFile
   }) async{
     final user = _ref.read(userProvider)!;
     String postID = const Uuid().v1();
     final imageRes = await _storageRepository.storeFile(
         path: "posts/${selectedCommunity.name}",
         id: postID,
-        file: file
+        file: file,
+        webFile: webFile
     );
 
     imageRes.fold(

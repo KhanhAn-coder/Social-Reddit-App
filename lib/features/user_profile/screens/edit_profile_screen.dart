@@ -71,8 +71,8 @@ class _EditProfileScreenState extends ConsumerState<EditProfileScreen> {
     }
   }
 
-  void saveUserProfile(String name, File? banner, File? profileFile, BuildContext context, UserModel user) {
-    ref.read(userProfileControllerProvider.notifier).editUserProfile(banner, profileFile, name, user, context);
+  void saveUserProfile(String name, File? banner, File? profileFile, Uint8List? bannerWeb, Uint8List? profileWebFile, BuildContext context, UserModel user) {
+    ref.read(userProfileControllerProvider.notifier).editUserProfile(banner, profileFile, bannerWebFile, profileWebFile, name, user, context);
   }
 
   @override
@@ -86,7 +86,7 @@ class _EditProfileScreenState extends ConsumerState<EditProfileScreen> {
                 title: const Text('Edit Profile'),
                 actions: [
                   TextButton(
-                      onPressed: ()=> saveUserProfile(nameController!.text.trim(), bannerFile, profileFile, context, user!),
+                      onPressed: ()=> saveUserProfile(nameController!.text.trim(), bannerFile, profileFile, bannerWebFile, profileWebFile, context, user!),
                       child: const Text('Save', style: TextStyle(
                           color: Colors.blue,
                           fontSize: 14,

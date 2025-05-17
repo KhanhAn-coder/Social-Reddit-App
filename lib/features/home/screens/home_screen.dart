@@ -86,11 +86,11 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
             'Home'
         ),
       ),
-      body: Responsive(child: Constants.tabBars[_page]),
+      body: Constants.tabBars[_page],
       drawer: const CommunityListDrawer(),
       endDrawer: const ProfileDrawer(),
       bottomNavigationBar: !kIsWeb? CupertinoTabBar(
-        backgroundColor: currentTheme.backgroundColor,
+        backgroundColor: currentTheme.scaffoldBackgroundColor,
         activeColor: currentTheme.iconTheme.color,
         items: const [
           BottomNavigationBarItem(

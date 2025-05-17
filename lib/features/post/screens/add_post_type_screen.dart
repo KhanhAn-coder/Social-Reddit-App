@@ -79,6 +79,7 @@ class _AddPostTypeScreenState extends ConsumerState<AddPostTypeScreen> {
       title: titleController.text.trim(),
       selectedCommunity: selectedCommunity ?? communities[0],
       file: image,
+      webFile: imageWebFile
     );
   }
 
@@ -100,7 +101,7 @@ class _AddPostTypeScreenState extends ConsumerState<AddPostTypeScreen> {
                 else if(isTypeLink && titleController.text.isNotEmpty && linkController.text.isNotEmpty){
                   shareLinkPost(ref, context);
                 }
-                else if(isTypeImage && titleController.text.isNotEmpty && image != null){
+                else if(isTypeImage && titleController.text.isNotEmpty && (image != null || imageWebFile != null)){
                   shareImagePost(ref, context);
                 }else{
                   showSnackBar(context, "Please Enter all the fields");

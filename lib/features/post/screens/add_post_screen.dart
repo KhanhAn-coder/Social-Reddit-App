@@ -34,7 +34,7 @@ class AddPostScreen extends ConsumerWidget {
               height: cardHeightWidth,
               width: cardHeightWidth,
               child:  Card(
-                color: currentTheme.backgroundColor,
+                color: currentTheme.scaffoldBackgroundColor,
                 child: Icon(Icons.image_outlined, size: iconSize,),
               ),
             ),
@@ -45,7 +45,7 @@ class AddPostScreen extends ConsumerWidget {
               height: cardHeightWidth,
               width: cardHeightWidth,
               child:  Card(
-                color: currentTheme.backgroundColor,
+                color: currentTheme.scaffoldBackgroundColor,
                 child: Icon(Icons.font_download_outlined, size: iconSize,),
               ),
             ),
@@ -56,7 +56,7 @@ class AddPostScreen extends ConsumerWidget {
               height: cardHeightWidth,
               width: cardHeightWidth,
               child:  Card(
-                color: currentTheme.backgroundColor,
+                color: currentTheme.scaffoldBackgroundColor,
                 child: Icon(Icons.link_outlined, size: iconSize,),
               ),
             ),

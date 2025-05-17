@@ -1,4 +1,5 @@
 import 'dart:io';
+import 'dart:typed_data';
 
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
@@ -34,21 +35,23 @@ class UserProfileController extends StateNotifier<bool> {
       super(false);
 
 
-  void editUserProfile( File? banner, File? profileFile, String name, UserModel user, BuildContext context) async{
+  void editUserProfile( File? banner, File? profileFile, Uint8List? bannerWeb, Uint8List? profileWebFile, String name, UserModel user, BuildContext context) async{
     //state = true;
-    if(banner!=null){
+    if(banner!=null || bannerWeb != null){
       final res = await _storageRepository.storeFile(
           path: 'userProfile/banner',
           id: user.uid,
-          file: banner
+          file: banner,
+          webFile: bannerWeb
       );
       res.fold((l) => showSnackBar(context, l.message), (r) => user = user.copyWith(banner: r));
     }
-    if(profileFile!=null){
+    if(profileFile!=null || profileWebFile != null){
       final res = await _storageRepository.storeFile(
           path: 'userProfile/profilePic',
           id: user.uid,
-          file: profileFile
+          file: profileFile,
+          webFile: profileWebFile
       );
       res.fold((l) => showSnackBar(context, l.message), (r) => user = user.copyWith(profilePic: r));
     }
